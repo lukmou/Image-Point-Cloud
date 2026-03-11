@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  /* Grayscale 3D Software Theme - Light Background */
+  --background: 0 0% 92%;
+  --foreground: 0 0% 15%;
+  
+  --card: 0 0% 88%;
+  --card-foreground: 0 0% 15%;
+  
+  --popover: 0 0% 88%;
+  --popover-foreground: 0 0% 15%;
+  
+  --primary: 0 0% 30%;
+  --primary-foreground: 0 0% 92%;
+  
+  --secondary: 0 0% 80%;
+  --secondary-foreground: 0 0% 15%;
+  
+  --muted: 0 0% 70%;
+  --muted-foreground: 0 0% 45%;
+  
+  --accent: 0 0% 30%;
+  --accent-foreground: 0 0% 92%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 92%;
+  
+  --border: 0 0% 78%;
+  --input: 0 0% 84%;
+  --ring: 0 0% 30%;
+  
+  --radius: 0.25rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary-foreground;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply text-white;
+  }
+  
+  .text-gradient-primary {
+    @apply text-primary;
+  }
+
+  .glass-card {
+    @apply bg-black/40 border border-white/5;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background)); 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border)); 
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary)); 
+}
