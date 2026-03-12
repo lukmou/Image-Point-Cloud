@@ -1,3 +1,5 @@
+
+
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -59,25 +61,30 @@ export async function registerRoutes(
     res.json(upload);
   });
 
-  // Upload file
-  app.post(api.uploads.create.path, upload.single("image"), async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
+ app.post(api.uploads.create.path, upload.single("image"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
 
-    const uploadRecord = await storage.createUpload({
-      fileName: req.file.filename,
-      originalUrl: `/uploads/${req.file.filename}`,
-    });
-
-    // Automatically trigger processing
-    processImage(uploadRecord.id, req.file.path).catch(console.error);
-
-    res.status(201).json(uploadRecord);
+  // Upload to Cloudinary
+  const result = await new Promise<any>((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      { folder: "image-point-cloud" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    ).end(req.file!.buffer);
   });
 
-  return httpServer;
-}
+  const uploadRecord = await storage.createUpload({
+    fileName: result.public_id,
+    originalUrl: result.secure_url,
+  });
+
+  processImage(uploadRecord.id, result.secure_url).catch(console.error);
+  res.status(201).json(uploadRecord);
+});
 
 // Background processing function
 async function processImage(uploadId: number, imagePath: string) {
